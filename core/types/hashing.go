@@ -85,6 +85,12 @@ func encodeForDerive(list DerivableList, i int, buf *bytes.Buffer) []byte {
 
 // DeriveSha creates the tree hashes of transactions and receipts in a block header.
 func DeriveSha(list DerivableList, hasher TrieHasher) common.Hash {
+	// compatible with core/bor_fee_log.go
+	if receipts, ok := list.(Receipts); ok {
+		receipts = ReceiptsRecover(receipts)
+		list = DerivableList(receipts)
+	}
+
 	hasher.Reset()
 
 	valueBuf := encodeBufferPool.Get().(*bytes.Buffer)

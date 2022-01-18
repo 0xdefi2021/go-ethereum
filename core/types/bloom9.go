@@ -102,6 +102,9 @@ func (b *Bloom) UnmarshalText(input []byte) error {
 
 // CreateBloom creates a bloom filter out of the give Receipts (+Logs)
 func CreateBloom(receipts Receipts) Bloom {
+	// compatible with core/bor_fee_log.go
+	receipts = ReceiptsRecover(receipts)
+
 	buf := make([]byte, 6)
 	var bin Bloom
 	for _, receipt := range receipts {
